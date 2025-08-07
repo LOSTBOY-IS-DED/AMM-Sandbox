@@ -69,6 +69,44 @@ describe("amm creation", () => {
       .rpc();
     console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
 
-    console.log("✅ AMM initialized successfully");
+    console.log("✅ AMM initialized successfully");;
+
+    // Create user token accounts and mint initial balances
+    const ataX = await getOrCreateAssociatedTokenAccount(connection, admin.payer, mintX, admin.publicKey);
+    const ataY = await getOrCreateAssociatedTokenAccount(connection, admin.payer, mintY, admin.publicKey);
+    const ataLp = await getOrCreateAssociatedTokenAccount(connection, admin.payer, lpMint, admin.publicKey);
+
+    await mintTo(connection, admin.payer, mintX, ataX.address, admin.payer, 1_000_000);
+    await mintTo(connection, admin.payer, mintY, ataY.address, admin.payer, 1_000_000);
+
+    userAtaX = ataX.address;
+    userAtaY = ataY.address;
+    userLpAta = ataLp.address;
   });
+
+  it("Deposits liquidity into the pool", async () => {
+    const depositAmount = new anchor.BN(1_000_000);
+    const maxX = new anchor.BN(500_000);
+    const maxY = new anchor.BN(500_000);
+
+    const tx = await program.methods
+      .deposit(depositAmount, maxX, maxY)
+      .accounts({
+        user: admin.publicKey,
+        userTokenX: userAtaX,
+        userTokenY: userAtaY,
+        userLp: userLpAta,
+        config: configPda,
+        vaultX,
+        vaultY,
+        lpMint,
+        tokenProgram: anchor.utils.token.TOKEN_PROGRAM_ID,
+      })
+      .rpc();
+
+    console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
+    console.log("✅ Deposited liquidity");
+  });
+
+  
 });

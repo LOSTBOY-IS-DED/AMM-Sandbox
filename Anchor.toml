@@ -4,6 +4,8 @@ package_manager = "yarn"
 [features]
 resolution = true
 skip-lint = false
+default = ["anchor-debug"]
+anchor-debug = []
 
 [programs.localnet]
 amms = "95RfKC6UDmxeMjR9AAhF9xVauYmeFQawVK5W51tHn8wb"
