@@ -42,7 +42,7 @@ pub enum AmmError {
 }
 
 impl From<CurveError> for AmmError {
-    fn from(e: CurveError) -> AmmError {
+    fn from(error: CurveError) -> AmmError {
         match error {
             CurveError::InvalidPrecision => AmmError::InvalidPrecision,
             CurveError::Overflow => AmmError::Overflow,
