@@ -4,7 +4,10 @@ declare_id!("95RfKC6UDmxeMjR9AAhF9xVauYmeFQawVK5W51tHn8wb");
 
 pub mod constant;
 pub mod errors;
+pub mod instructions;
 pub mod states;
+
+pub use instructions::*;
 #[program]
 pub mod amms {
     use super::*;
